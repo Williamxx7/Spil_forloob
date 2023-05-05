@@ -4,12 +4,14 @@ let moveStateX = "idle";
 let gameState = "parkour";
 let distance = 0;
 let runseq = 1;
-let playerYJump = 650;
-let playeridley = 650
+let playerYJump = 550;
+let playeridley = 550
 let jump = false;
 let distshort;
 let backgroundsong;
-let enemyIdleY = 625
+let enemyIdleY = 525
+
+let enemyimagecount = 1
 
 function preload() {
   // for (let i = 0; i < 8; i++) {
@@ -26,7 +28,7 @@ function setup() {
   p1 = new Player(width, height + 100);
   ground = new Field(0, -200);
   ground2 = new Field(-width, -200);
-  e1 = new Enemy(width * 2, height + 200, 200);
+  e1 = new Enemy(width * 2, height + 200);
 
   //backgroundsong.play();
 
@@ -48,7 +50,6 @@ function draw() {
   }
 
   push();
-  fill("red");
   translate(-p1.x + 200, -p1.y + enemyIdleY);
   e1.display();
   pop();
@@ -104,7 +105,7 @@ class Player {
     this.y = y;
     this.velocity = 0;
     this.gravity = 0.3;
-    this.op = -8;
+    this.op = -10;
     this.images = {
       idle: loadImage("CharacterIdle.png"),
       run1: loadImage("RUN1.png"),
@@ -119,6 +120,7 @@ class Player {
     this.image = this.images.idle;
   }
   display() {
+
     if (this.image === undefined) return;
     //scale(-1,1)
     image(this.image, this.x, this.y, 250, 250);
@@ -174,11 +176,22 @@ class Enemy {
     this.x = x;
     this.y = y;
     this.w = w;
+    this.images = {
+      fire1: loadImage("Fire1.png"),
+      fire2: loadImage("Fire2.png"),
+      fire3: loadImage("Fire3.png"),
+    };
   }
 
   display() {
-    fill("red");
-    circle(this.x, this.y, this.w);
+    enemyimagecount += 0.1
+
+    if(enemyimagecount > 3) {
+      enemyimagecount = 1
+    }
+
+    this.image = this.images["fire" + round(enemyimagecount)];
+    image(this.image, this.x, this.y/1.2, 250, 250);
   }
 }
 
