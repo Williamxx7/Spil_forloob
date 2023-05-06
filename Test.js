@@ -10,8 +10,12 @@ let jump = false;
 let distshort;
 let backgroundsong;
 let enemyIdleY = 525
-
 let enemyimagecount = 1
+
+
+let bosestimeX
+let bosestimeY
+
 
 function preload() {
   // for (let i = 0; i < 8; i++) {
@@ -38,31 +42,71 @@ function setup() {
 function draw() {
   background(220);
 
+if (distance > 25){
+  distance = 0
+  bosestimeX = -p1.x+200
+  bosestimeY = -p1.y+playerYJump
+  gameState = "boss"
+}
+
+
   if (gameState == "parkour") {
     push();
     translate(-p1.x + 200, -p1.y + playerYJump);
     imageMode(CENTER);
     p1.display();
     p1.move();
+    
+    
     pop();
-  } else {
+  } else if(gameState == "boss") {
     print("Boss Time");
+
+    push();
+    print(playerYJump-p1.y)
+    translate(bosestimeX, bosestimeY + (playerYJump-playeridley));
+    imageMode(CENTER);
+    //p1.y = (playerYJump- p1.y)
+    p1.display();
+    p1.move();
+    pop();
+
+
+  } else if (gameState == "dead"){
+    push();
+    translate(-p1.x + 200, -p1.y + playerYJump);
+    imageMode(CENTER);
+    p1.display();
+
+    fill("red")
+    textSize(50)
+    textAlign(CENTER)
+    text("GAME OVER", p1.x +30, p1.y-150)
+
+    pop();
+
   }
+
 
   push();
   translate(-p1.x + 200, -p1.y + enemyIdleY);
+  text("Use W to jump \nUsw D to move forward", p1.x/1.09, p1.y/1.8)
   e1.display();
   pop();
 
   text("Distance: " + Math.round(distance), 50, 50);
 
+  if (gameState == "parkour"){
+  
   ground.fieldMove();
-  ground.display();
-
   ground2.fieldMove();
-  ground2.display();
 
   kollison();
+
+}
+
+ground.display();
+ground2.display();
 
 }
 
@@ -123,7 +167,7 @@ class Player {
 
     if (this.image === undefined) return;
     //scale(-1,1)
-    image(this.image, this.x, this.y, 250, 250);
+    image(this.image, this.x, this.y, 150, 150);
   }
   displayPunch() {}
 
@@ -164,10 +208,11 @@ class Player {
         this.image = this.images["run" + round(runseq)];
       }
     }
-
-    /*else if (moveState == "left") {
-      this.x -= 10;
-    }*/
+    if(gameState == "boss"){
+      if(moveStateX == "left") {
+        this.x -= 10;
+    }
+  }
   }
 }
 
@@ -191,16 +236,18 @@ class Enemy {
     }
 
     this.image = this.images["fire" + round(enemyimagecount)];
-    image(this.image, this.x, this.y/1.2, 250, 250);
+    image(this.image, this.x, this.y/1.2, 150, 250);
   }
 }
 
 function kollison() {
-  distshort = dist(p1.x, (p1.y + (playerYJump - playeridley))+20 , e1.x, e1.y);
-  print(distshort);
-  if (distshort < 170) {
-    print("Av");
-  }
+ if(p1.x + 30 >= e1.x && 
+    p1.x <= e1.x + 200 &&
+    (p1.y + playeridley -30)+(playerYJump -p1.y)>= e1.y - 75
+    ){
+      gameState = "dead"
+    }
+
 }
 
 
