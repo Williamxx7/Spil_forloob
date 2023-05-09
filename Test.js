@@ -4,12 +4,12 @@ let moveStateX = "idle";
 let gameState = "parkour";
 let distance = 0;
 let runseq = 1;
-let playerYJump = 550;
-let playeridley = 550
+let playerYJump
+let playeridley 
 let jump = false;
 let distshort;
 let backgroundsong;
-let enemyIdleY = 525
+let enemyIdleY 
 let enemyimagecount = 1
 
 
@@ -29,10 +29,19 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noSmooth();
-  p1 = new Player(width, height + 100);
-  ground = new Field(0, -200);
-  ground2 = new Field(-width, -200);
-  e1 = new Enemy(width * 2, height + 200);
+  p1 = new Player(width, height/(719/819));
+  ground = new Field(0, height-(height/(719/965)));
+  ground2 = new Field(-width, height-(height/(719/965)));
+  e1 = new Enemy(width * 2,(height/(719/880)));
+
+  print((height/(9+44/75)))
+  print(p1.y)
+
+  playeridley = height/1.7
+  playerYJump = height/1.7
+  enemyIdleY = height/1.9
+
+
 
   //backgroundsong.play();
 
@@ -45,7 +54,7 @@ function draw() {
 if (distance > 25){
   distance = 0
   bosestimeX = -p1.x+200
-  bosestimeY = -p1.y+playerYJump
+  bosestimeY = -p1.y+playeridley
   gameState = "boss"
 }
 
@@ -56,7 +65,8 @@ if (distance > 25){
     imageMode(CENTER);
     p1.display();
     p1.move();
-    
+
+   
     
     pop();
   } else if(gameState == "boss") {
@@ -88,14 +98,19 @@ if (distance > 25){
   }
 
 
+
+  if(gameState == "dead" || gameState == "parkour"){
   push();
   translate(-p1.x + 200, -p1.y + enemyIdleY);
-  text("Use W to jump \nUsw D to move forward", p1.x/1.09, p1.y/1.8)
+  text("Use W to jump \nUsw D to move forward", p1.x/1.13, height/1.3)
   e1.display();
+
+
   pop();
 
   text("Distance: " + Math.round(distance), 50, 50);
 
+}
   if (gameState == "parkour"){
   
   ground.fieldMove();
@@ -120,7 +135,7 @@ class Field {
   }
 
   display() {
-    image(this.image, this.x, this.y, width + 50, height * 1.5);
+    image(this.image, this.x, this.y, width + (width *0.05), height * 1.6);
   }
   fieldMove() {
     if (moveStateX == "right") {
@@ -148,8 +163,8 @@ class Player {
     this.x = x;
     this.y = y;
     this.velocity = 0;
-    this.gravity = 0.3;
-    this.op = -10;
+    this.gravity = height/2396.6;
+    this.op = -height/65;
     this.images = {
       idle: loadImage("CharacterIdle.png"),
       run1: loadImage("RUN1.png"),
@@ -167,7 +182,7 @@ class Player {
 
     if (this.image === undefined) return;
     //scale(-1,1)
-    image(this.image, this.x, this.y, 150, 150);
+    image(this.image, this.x, this.y, height/(4+119/150), height/(4+119/150));
   }
   displayPunch() {}
 
@@ -236,15 +251,15 @@ class Enemy {
     }
 
     this.image = this.images["fire" + round(enemyimagecount)];
-    image(this.image, this.x, this.y/1.2, 150, 250);
+    image(this.image, this.x, this.y/1.2, height/(4+119/150), height/(2+219/250));
   }
 }
 
 function kollison() {
- if(p1.x + 30 >= e1.x && 
-    p1.x <= e1.x + 200 &&
-    (p1.y + playeridley -30)+(playerYJump -p1.y)>= e1.y - 75
-    ){
+ if(p1.x + (height/(23+29/30)) >= e1.x && 
+    p1.x <= e1.x + (height/3.595) &&
+    (p1.y + playeridley -(height/(23+29/30))+(playerYJump -p1.y) >= height - (height/(23+29/30))))
+    {
       gameState = "dead"
     }
 
