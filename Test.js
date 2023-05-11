@@ -17,6 +17,9 @@ let backgroundsong;
 let enemyIdleY 
 let enemyimagecount = 1
 
+let playerFightX
+
+
 let i = 1
 
 let bosestimeX
@@ -35,16 +38,15 @@ function setup() {
   ground2 = new Field(-width, height-(height/(719/965)));
   e1 = new Enemy(width * 2,(height/(719/880)));
 
-  print(width)
 
   playeridley = height/1.7
   playerYJump = height/1.7
   enemyIdleY = height/1.9
 
-
+  print(p1.x)
+  print(width)
 
   //backgroundsong.play();
-
 
 }
 
@@ -56,7 +58,33 @@ if (distance > 25){
   bosestimeX = -p1.x+200
   bosestimeY = -p1.y+playeridley
   gameState = "boss"
+  moveStateX = "idle"
+  playerFightX = p1.x
+  v1 = new Boss(p1.x + width/1.7,(height))
+  s1 = new Shot(p1.x + width/1.7,(height))
+
 }
+
+  if (gameState == "boss"){
+    push()
+    translate(bosestimeX, bosestimeY)
+    v1.display();
+    s1.display();
+    fill("red")
+    rect(playerFightX, width/2.5 , 200 + s1.speedX, 50)
+
+    pop()
+    v1.op += 2
+    s1.op +=2
+    s1.speedX -= 4
+
+    if(s1.speedX + s1.x < playerFightX - random(300, 500)){
+      //s1.x = playerFightX
+      s1.speedX = 0
+    }
+
+
+  }
 
 
   if (gameState == "parkour") {
@@ -65,20 +93,22 @@ if (distance > 25){
     imageMode(CENTER);
     p1.display();
     p1.move();
-
    
     
     pop();
   } else if(gameState == "boss") {
-    print("Boss Time");
+
+    print("p1.x" + p1.x)
+    print("width" + width)
+
 
     push();
-    print(playerYJump-p1.y)
     translate(bosestimeX, bosestimeY + (playerYJump-playeridley));
     imageMode(CENTER);
     //p1.y = (playerYJump- p1.y)
     p1.display();
     p1.move();
+
     pop();
 
 
@@ -104,6 +134,7 @@ if (distance > 25){
   translate(-p1.x + 200, -p1.y + enemyIdleY);
   text("Use W to jump \nUsw D to move forward", p1.x/1.13, height/1.3)
   e1.display();
+
 
 
   pop();
@@ -208,8 +239,6 @@ class Player {
       this.velocity += this.op;
     }
 
-   
-
     if (moveStateY == "idle") {
       if (playerYJump > playeridley-1) {
         jump = false;
@@ -221,7 +250,7 @@ class Player {
       this.image = this.images.idle;
     }
 
-    if (moveStateX == "right") {
+    if (moveStateX == "right" && gameState != "boss") {
       this.x += width/85;
       if (runseq <= 8) {
         runseq += 0.2;
@@ -232,11 +261,24 @@ class Player {
         this.image = this.images["run" + round(runseq)];
       }
     }
-    if(gameState == "boss"){
-      if(moveStateX == "left") {
+  
+
+      if(gameState == "boss" && moveStateX == "left" && p1.x > (playerFightX- 150)) {
         this.x -= width/85;
     }
+  
+    if (gameState == "boss" && moveStateX == "right" && p1.x < (width + (playerFightX - 250))) {
+      this.x += width/85;
+      if (runseq <= 8) {
+        runseq += 0.2;
+        this.image = this.images["run" + round(runseq)];
+      } else {
+        runseq = 1;
+        this.image = this.images["run" + round(runseq)];
+      }
   }
+
+
   if (attackState == "Punch" && i <= 6){
     this.image = this.images["punch" + round(i)];
     i += 0.2
@@ -285,30 +327,68 @@ function kollison() {
 }
 
 
-class boss {
-  constructor(x,y){
+class Boss {
+  constructor(x,y, op, speedX){
     this.x = x
     this.y = y
+    this.op = op
+    this.op = 0
+    this.speedX = speedX
+    this.speedX = 0
     this.images = {
-      bosstest: loadImage("Boss_test.png")
+      bosstest: loadImage("Boss_test.png"),
+  
     }
-
+    this.image = this.images.bosstest
   }
   
   display(){
-   image(this.image)   
+    tint(255, this.op)
+    image(this.image, this.x, this.y/1.2, 250 , 250);
+}
+
+  shot(){
+    this.imageshot = this.images.bum
+    image(this.imageshot, this.x + this.speedX, this.y/1.1, 250 , 250);
   }
 
 }
 
 
+class Shot{
+  constructor(x,y, op, speedX){
+    this.x = x
+    this.y = y
+    this.op = op
+    this.op = 0
+    this.speedX = speedX
+    this.speedX = 0
+    this.images = {
+      bum: loadImage("Bum.png")
+    }
+    this.image = this.images.bum
+  }
+  
+  display(){
+    tint(255, this.op)
+    image(this.image, this.x + this.speedX, this.y/1.1, 250 , 250);
+}
+
+
+}
+
+
+
 function keyPressed() {
+
+if(gameState != "boss"){
   if (key == "d") {
     moveStateX = "right";
   }
   if (key == "a") {
     moveStateX = "left";
   }
+}
   if (key == "w") {
     moveStateY = "jump";
   }
@@ -318,6 +398,16 @@ function keyPressed() {
   if (key == "k" && attackState == "idle"){
     attackState = "Punch";
   }
+
+if (gameState == "boss"){
+    if (key == "d" && p1.x < (width + (playerFightX- 300))) {
+    moveStateX = "right";
+  }
+  if (key == "a") {
+    moveStateX = "left";
+  }
+}
+
 }
 
 function keyReleased() {
