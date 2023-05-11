@@ -1,3 +1,8 @@
+// Player billedere er blevet fundet på https://zegley.itch.io/2d-platformermetroidvania-asset-pack
+// Jorden er blevet tegnet af os i https://www.pixilart.com/dra
+// Ilden er fundet på ........
+
+
 let attackState = "idle";
 let moveStateY = "idle";
 let moveStateX = "idle";
@@ -12,19 +17,15 @@ let backgroundsong;
 let enemyIdleY 
 let enemyimagecount = 1
 
+let i = 1
 
 let bosestimeX
 let bosestimeY
 
 
 function preload() {
-  // for (let i = 0; i < 8; i++) {
-  // imageRunArray();
-  //}
-  test = loadImage("PlayerIdle.png");
   backgroundsong = loadSound("BackgroundMusic.mp3");
 }
-//lol
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -34,8 +35,7 @@ function setup() {
   ground2 = new Field(-width, height-(height/(719/965)));
   e1 = new Enemy(width * 2,(height/(719/880)));
 
-  print((height/(9+44/75)))
-  print(p1.y)
+  print(width)
 
   playeridley = height/1.7
   playerYJump = height/1.7
@@ -139,7 +139,7 @@ class Field {
   }
   fieldMove() {
     if (moveStateX == "right") {
-      this.x -= 10;
+      this.x -= width/85;
 
       if (this.x <= -width) {
         this.x = width;
@@ -175,6 +175,13 @@ class Player {
       run6: loadImage("RUN6.png"),
       run7: loadImage("RUN7.png"),
       run8: loadImage("RUN8.png"),
+      punch1: loadImage("Punch1.png"),
+      punch2: loadImage("Punch2.png"),
+      punch3: loadImage("Punch3.png"),
+      punch4: loadImage("Punch4.png"),
+      punch5: loadImage("Punch5.png"),
+      punch6: loadImage("Punch6.png")
+
     };
     this.image = this.images.idle;
   }
@@ -201,6 +208,8 @@ class Player {
       this.velocity += this.op;
     }
 
+   
+
     if (moveStateY == "idle") {
       if (playerYJump > playeridley-1) {
         jump = false;
@@ -213,7 +222,7 @@ class Player {
     }
 
     if (moveStateX == "right") {
-      this.x += 10;
+      this.x += width/85;
       if (runseq <= 8) {
         runseq += 0.2;
         distance += 0.1;
@@ -225,9 +234,19 @@ class Player {
     }
     if(gameState == "boss"){
       if(moveStateX == "left") {
-        this.x -= 10;
+        this.x -= width/85;
     }
   }
+  if (attackState == "Punch" && i <= 6){
+    this.image = this.images["punch" + round(i)];
+    i += 0.2
+
+  } else {
+    //this.image = this.image["idle"];
+    attackState = "idle"
+    i = 1
+}
+
   }
 }
 
@@ -266,6 +285,23 @@ function kollison() {
 }
 
 
+class boss {
+  constructor(x,y){
+    this.x = x
+    this.y = y
+    this.images = {
+      bosstest: loadImage("Boss_test.png")
+    }
+
+  }
+  
+  display(){
+   image(this.image)   
+  }
+
+}
+
+
 function keyPressed() {
   if (key == "d") {
     moveStateX = "right";
@@ -278,6 +314,9 @@ function keyPressed() {
   }
   if (key == "s") {
     moveStateY = "crouch";
+  }
+  if (key == "k" && attackState == "idle"){
+    attackState = "Punch";
   }
 }
 
@@ -294,4 +333,5 @@ function keyReleased() {
   if (key == "s") {
     moveStateX = "idle";
   }
+
 }
