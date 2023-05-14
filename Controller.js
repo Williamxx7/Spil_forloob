@@ -22,7 +22,8 @@ let groundArray = []
 
 //preloader baggrunsmusik 
 function preload() {
-    //Fundet via https://p5js.org/examples/sound-load-and-play-sound.html
+    //Kode fundet via https://p5js.org/examples/sound-load-and-play-sound.html
+    //Sang fundet på https://www.youtube.com/watch?v=8E8YdqLG5c8
     backgroundsong = loadSound("BackgroundMusic.mp3");
   }
   
