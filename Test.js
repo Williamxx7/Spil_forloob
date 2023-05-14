@@ -2,6 +2,7 @@
 // Jorden er blevet tegnet af os i https://www.pixilart.com/dra
 // Ilden er fundet på ........
 
+//--CONTROLLER--//
 
 let attackState = "idle";
 let moveStateY = "idle";
@@ -16,12 +17,8 @@ let distshort;
 let backgroundsong;
 let enemyIdleY 
 let enemyimagecount = 1
-
 let playerFightX
-
-
 let i = 1
-
 let bosestimeX
 let bosestimeY
 
@@ -61,22 +58,35 @@ if (distance > 25){
   moveStateX = "idle"
   playerFightX = p1.x
   v1 = new Boss(p1.x + width/1.7,(height))
-  s1 = new Shot(p1.x + width/1.7,(height))
-
+  s1 = new Shot(p1.x + width/1.55,(height))
+  //lol = s1.x 
 }
 
-  if (gameState == "boss"){
+  if (gameState == "parkour") {
+    push();
+    translate(-p1.x + 200, -p1.y + playerYJump);
+    imageMode(CENTER);
+    p1.display();
+    p1.move(); 
+    pop();
+    ground.fieldMove();
+    ground2.fieldMove();
+  
+    kollison();
+  } else if(gameState == "boss") {
+
     push()
     translate(bosestimeX, bosestimeY)
     v1.display();
     s1.display();
-    fill("red")
-    rect(playerFightX, width/2.5 , 200 + s1.speedX, 50)
+    fill("green")
+    //rect(playerFightX, width/3 , 200, 50)
+    //rect(lol + s1.speedX +105, height +45, 45 ,45)
 
     pop()
     v1.op += 2
     s1.op +=2
-    s1.speedX -= 4
+    s1.speedX -= 5
 
     if(s1.speedX + s1.x < playerFightX - random(300, 500)){
       //s1.x = playerFightX
@@ -84,31 +94,13 @@ if (distance > 25){
     }
 
 
-  }
-
-
-  if (gameState == "parkour") {
-    push();
-    translate(-p1.x + 200, -p1.y + playerYJump);
-    imageMode(CENTER);
-    p1.display();
-    p1.move();
-   
-    
-    pop();
-  } else if(gameState == "boss") {
-
-    print("p1.x" + p1.x)
-    print("width" + width)
-
-
     push();
     translate(bosestimeX, bosestimeY + (playerYJump-playeridley));
     imageMode(CENTER);
-    //p1.y = (playerYJump- p1.y)
     p1.display();
     p1.move();
-
+    //rect(p1.x, p1.y + playeridley -(height/(23+29/30))+(playerYJump -p1.y), 100,100)
+    //rect(lol + s1.speedX +105, height +45, 45 ,45)
     pop();
 
 
@@ -119,9 +111,9 @@ if (distance > 25){
     p1.display();
 
     fill("red")
-    textSize(50)
+    textSize(height/14)
     textAlign(CENTER)
-    text("GAME OVER", p1.x +30, p1.y-150)
+    text("GAME OVER", p1.x +30, p1.y-(height/14))
 
     pop();
 
@@ -134,22 +126,12 @@ if (distance > 25){
   translate(-p1.x + 200, -p1.y + enemyIdleY);
   text("Use W to jump \nUsw D to move forward", p1.x/1.13, height/1.3)
   e1.display();
-
-
-
   pop();
 
   text("Distance: " + Math.round(distance), 50, 50);
 
 }
-  if (gameState == "parkour"){
-  
-  ground.fieldMove();
-  ground2.fieldMove();
 
-  kollison();
-
-}
 
 ground.display();
 ground2.display();
@@ -229,17 +211,16 @@ class Player {
     playerYJump += this.velocity;
 
     if (playerYJump > playeridley) {
-
       this.velocity = 0;
       playerYJump = playeridley;
     }
-    //https://www.youtube.com/watch?v=UkiQCPp8ino
+    //Vores metode for spillerens hop er lavet udfra https://www.youtube.com/watch?v=UkiQCPp8ino
     if (moveStateY == "jump" && jump == false) {
       jump = true;
       this.velocity += this.op;
     }
 
-    if (moveStateY == "idle") {
+    else if (moveStateY == "idle") {
       if (playerYJump > playeridley-1) {
         jump = false;
       }
@@ -250,7 +231,7 @@ class Player {
       this.image = this.images.idle;
     }
 
-    if (moveStateX == "right" && gameState != "boss") {
+    else if (moveStateX == "right" && gameState != "boss") {
       this.x += width/85;
       if (runseq <= 8) {
         runseq += 0.2;
@@ -263,11 +244,11 @@ class Player {
     }
   
 
-      if(gameState == "boss" && moveStateX == "left" && p1.x > (playerFightX- 150)) {
+      else if(gameState == "boss" && moveStateX == "left" && p1.x > (playerFightX- 150)) {
         this.x -= width/85;
     }
   
-    if (gameState == "boss" && moveStateX == "right" && p1.x < (width + (playerFightX - 250))) {
+    else if (gameState == "boss" && moveStateX == "right" && p1.x < (width + (playerFightX - 250))) {
       this.x += width/85;
       if (runseq <= 8) {
         runseq += 0.2;
@@ -336,22 +317,16 @@ class Boss {
     this.speedX = speedX
     this.speedX = 0
     this.images = {
-      bosstest: loadImage("Boss_test.png"),
+      idle: loadImage("Boss_test.png"),
   
     }
-    this.image = this.images.bosstest
+    this.image = this.images.idle
   }
   
   display(){
     tint(255, this.op)
     image(this.image, this.x, this.y/1.2, 250 , 250);
 }
-
-  shot(){
-    this.imageshot = this.images.bum
-    image(this.imageshot, this.x + this.speedX, this.y/1.1, 250 , 250);
-  }
-
 }
 
 
@@ -381,47 +356,47 @@ class Shot{
 
 function keyPressed() {
 
-if(gameState != "boss"){
-  if (key == "d") {
-    moveStateX = "right";
+  if(gameState != "boss"){
+    if (key == "d") {
+      moveStateX = "right";
+    }
+    if (key == "a") {
+      moveStateX = "left";
+    }
   }
-  if (key == "a") {
-    moveStateX = "left";
+    if (key == "w") {
+      moveStateY = "jump";
+    }
+    if (key == "s") {
+      moveStateY = "crouch";
+    }
+    if (key == "k" && attackState == "idle"){
+      attackState = "Punch";
+    }
+  
+  if (gameState == "boss"){
+      if (key == "d" && p1.x < (width + (playerFightX- 300))) {
+      moveStateX = "right";
+    }
+    if (key == "a") {
+      moveStateX = "left";
+    }
   }
-}
-  if (key == "w") {
-    moveStateY = "jump";
+  
   }
-  if (key == "s") {
-    moveStateY = "crouch";
+  
+  function keyReleased() {
+    if (key == "d") {
+      moveStateX = "idle";
+    }
+    if (key == "a") {
+      moveStateX = "idle";
+    }
+    if (key == "w") {
+      moveStateY = "idle";
+    }
+    if (key == "s") {
+      moveStateX = "idle";
+    }
+  
   }
-  if (key == "k" && attackState == "idle"){
-    attackState = "Punch";
-  }
-
-if (gameState == "boss"){
-    if (key == "d" && p1.x < (width + (playerFightX- 300))) {
-    moveStateX = "right";
-  }
-  if (key == "a") {
-    moveStateX = "left";
-  }
-}
-
-}
-
-function keyReleased() {
-  if (key == "d") {
-    moveStateX = "idle";
-  }
-  if (key == "a") {
-    moveStateX = "idle";
-  }
-  if (key == "w") {
-    moveStateY = "idle";
-  }
-  if (key == "s") {
-    moveStateX = "idle";
-  }
-
-}
