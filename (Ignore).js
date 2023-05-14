@@ -1,6 +1,3 @@
-// Player billedere er blevet fundet på https://zegley.itch.io/2d-platformermetroidvania-asset-pack
-// Jorden er blevet tegnet af os i https://www.pixilart.com/dra
-// Ilden er fundet på ........
 
 //--CONTROLLER--//
 

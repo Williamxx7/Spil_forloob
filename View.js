@@ -23,13 +23,15 @@ function draw() {
       push();
       translate(-p1.x + 200, -p1.y + playerYJump);
       imageMode(CENTER);
+      //Tegner playeren 
       p1.display();
+      //Kalder move og ser om gameStaten har ændret sig
       p1.move();
       pop();
 
-          
-    ground.fieldMove();
-    ground2.fieldMove();
+    //kalder fieldmove som ændre groundens placering.       
+    groundArray[0].fieldMove();
+    groundArray[1].fieldMove();
   
     kollison();
 
@@ -42,8 +44,6 @@ function draw() {
       v1.display();
       s1.display();
       fill("green")
-      //rect(playerFightX, width/3 , 200, 50)
-      //rect(lol + s1.speedX +105, height +45, 45 ,45)
       pop()
 
       //Gør at vores boss og skud gennemsigtighed bliver højre når de bliver vist. 
@@ -92,15 +92,18 @@ function draw() {
     if(gameState == "dead" || gameState == "parkour"){
     push();
     translate(-p1.x + 200, -p1.y + enemyIdleY);
-    text("Use W to jump \nUsw D to move forward", p1.x/1.13, height/1.3);
     e1.display();
     pop();
-  
-    text("Distance: " + Math.round(distance), 50, 50);
+
+    textSize(height/30)
+    text("Distance: " + Math.round(distance), width/30,height/14);
+    textSize(height/50)
+    text("Use W to jump \nUse D/A to move\nUse K to punch", width/30, height/8);
+
   }
 
   //tegner jorden/ground
-  ground.display();
-  ground2.display();
+  groundArray[0].display();
+  groundArray[1].display();
   
   }

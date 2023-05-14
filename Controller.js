@@ -18,6 +18,7 @@ let playerFightX
 let i = 1
 let bosestimeX
 let bosestimeY
+let groundArray = []
 
 //preloader baggrunsmusik 
 function preload() {
@@ -32,9 +33,14 @@ function preload() {
     noSmooth();
     //deiner laver objekter ud fra klasser
     p1 = new Player(width, height/(719/819));
-    ground = new Field(0, height-(height/(719/965)));
-    ground2 = new Field(-width, height-(height/(719/965)));
     e1 = new Enemy(width * 2,(height/(719/880)));
+
+    //Opretter to ground obejeketer i groundArray
+    for (let i = 0; i < 1; i++) {
+        groundArray.push(new Field(0, height - (height / (719 / 965))));
+        groundArray.push(new Field(-width, height-(height/(719/965))))
+    }
+
   
     //Tildele variablerne deres værdi som bruges til de forskllige objekters position.
     playeridley = height/1.7
@@ -78,13 +84,9 @@ function keyPressed() {
 
     //Statemachine for vores player attack state.
     if (key == "k" && attackState == "idle"){
-      attackState = "Punch";
+      attackState = "punch";
     }
-  
-
-  
   }
-
 
   //Gør at statemachinesne bliver sat til "idle" igen når knappen er blevet frigivet.
   function keyReleased() {

@@ -41,6 +41,7 @@ class Field {
       this.gravity = height/2396.6;
       this.op = -height/65;
       //Array med alle billederne til spilleren. 
+      //Fundet på https://zegley.itch.io/2d-platformermetroidvania-asset-pack
       this.images = {
         idle: loadImage("CharacterIdle.png"),
         run1: loadImage("RUN1.png"),
@@ -135,7 +136,7 @@ class Field {
     }
   
     //Hvis attackState er lig Punch og i er mindre eller lig 6 da det er antallet af animationer i punch.
-    if (attackState == "Punch" && i <= 6){
+    if (attackState == "punch" && i <= 6){
       //sætter image til punch
       this.image = this.images["punch" + round(i)];
       //Ændre i værdien så der kommer en animation
@@ -158,6 +159,7 @@ class Field {
       this.y = y;
       this.w = w;
       //array med billederne
+      //Fundet på https://www.freepik.com/free-vector/flame-with-smoke-animation-frames-pixel-art-style_13437705.htm#query=pixel%20sprite&position=2&from_view=keyword&track=ais
       this.images = {
         fire1: loadImage("Fire1.png"),
         fire2: loadImage("Fire2.png"),
@@ -203,6 +205,7 @@ class Field {
       this.speedX = 0
       //Lavet som array til bossen billeder
       //Lavet så bossen også kan få nogen animationer
+      //Fundet på www.pngwing.com
       this.images = {
         idle: loadImage("Boss_test.png"),
     
@@ -216,7 +219,7 @@ class Field {
       // tint fundet på  https://p5js.org/examples/image-transparency.html
       tint(255, this.op)
       //viser billedet.
-      image(this.image, this.x, this.y/1.2, 250 , 250);
+      image(this.image, this.x, this.y/1.2, height/2.3 , height/2.3);
   } 
 }
   
@@ -230,6 +233,7 @@ class Field {
       this.speedX = speedX
       this.speedX = 0
       //Array til billederne
+      //Fundet på www.pngwing.com
       this.images = {
         bum: loadImage("Bum.png")
       }
@@ -239,7 +243,7 @@ class Field {
     //tegner/viser billedet i starten gennemsigtig
     display(){
       tint(255, this.op)
-      image(this.image, this.x + this.speedX, this.y/1.1, 250 , 250);
+      image(this.image, this.x + this.speedX, this.y/1.1, height/2.3 , height/2.3);
   }
   
   
